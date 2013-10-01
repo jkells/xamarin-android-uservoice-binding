@@ -1,0 +1,5 @@
+<metadata>
+  <remove-node path="/api/package[@name='com.uservoice.uservoicesdk.babayaga']/class[@name='BabayagaTask']"/>
+  <remove-node path="/api/package[@name='com.uservoice.uservoicesdk.image']/class[@name='DownloadImageTask']"/>
+  <remove-node path="/api/package[@name='com.uservoice.uservoicesdk.rest']/class[@name='RestTask']"/>  
+</metadata>

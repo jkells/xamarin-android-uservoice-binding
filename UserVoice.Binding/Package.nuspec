@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Xamarin.Android.UserVoice.Binding</id>
+    <version>1.0.0.1000</version>
+    <authors>UserVoice</authors>	
+	<owners>Jared Kells</owners>
+    <projectUrl>https://github.com/uservoice/uservoice-android-sdk</projectUrl>
+    <description>Xamarin Android bindings for the user voice sdk</description>    
+    <tags>android</tags>
+  </metadata>
+  <files>	
+	<file src="bin\release\Xamarin.Android.UserVoice.dll" target="lib\MonoAndroid" />	
+  </files>
+</package>
