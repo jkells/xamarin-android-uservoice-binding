@@ -8,8 +8,13 @@ properties {
   $config = "Release"  
 
   $android_sdk_dir = $env:ANDROID_SDK_HOME
+  
   $android_library_dir = "$base_dir\uservoice-android-sdk"
-  $android_library_build_dir = "$android_library_dir\UserVoiceSDK\build\bundles\release"
+  $android_library_jar = "$android_library_dir\UserVoiceSDK\build\bundles\release\classes.jar"
+  $android_library_res_dir = "$android_library_dir\UserVoiceSDK\build\bundles\release\res"  
+  $android_library_classes_dir = "$android_library_dir\UserVoiceSDK\build\classes\release"
+  $android_library_libs_dir = "$android_library_dir\UserVoiceSDK\build\libs"  
+  $android_library_manifest = "$android_library_dir\UserVoiceSDK\build\bundles\release\AndroidManifest.xml"
 }
 
 Framework "4.0"
@@ -21,7 +26,6 @@ task Clean {
   remove-item -force -recurse $project_dir\bin -ErrorAction SilentlyContinue
   remove-item -force -recurse "$jar_dir\bin" -ErrorAction SilentlyContinue
   remove-item -force -recurse "$jar_dir\res" -ErrorAction SilentlyContinue
-  remove-item -force -recurse "$jar_dir\assets" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.zip" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.jar" -ErrorAction SilentlyContinue  
 }
@@ -38,9 +42,17 @@ task Package -depends Compile{
 
 task Copy-Jars -depends Clean,Test-Environment,Build-Java-Library {
     Copy-Item -Force "$base_dir\ThirdParty\*.jar" "$jar_dir"
-    Copy-Item -Force "$android_library_build_dir\*.jar" "$jar_dir"
-    Copy-Item -Recurse -Force "$android_library_build_dir\res" "$jar_dir"
-    Copy-Item -Recurse -Force "$android_library_build_dir\assets" "$jar_dir"
+    Copy-Item -Force "$android_library_libs_dir\*.jar" "$jar_dir"
+        
+    mkdir -Force "$jar_dir\bin"
+    mkdir -Force "$jar_dir\bin\classes"
+    mkdir -Force "$jar_dir\res"
+    
+    Copy-Item -Force "$android_library_jar" "$jar_dir\bin"
+    Copy-Item -Force "$android_library_manifest" "$jar_dir\bin"
+    Copy-Item -Recurse -Force "$android_library_res_dir" "$jar_dir\bin"
+    Copy-Item -Recurse -Force "$android_library_classes_dir\*" "$jar_dir\bin\classes"
+    Copy-Item -Recurse -Force "$android_library_res_dir" "$jar_dir"   
         
     # Compress the binaries and resources into the library package zip
     exec{
@@ -49,7 +61,7 @@ task Copy-Jars -depends Clean,Test-Environment,Build-Java-Library {
     }
 
     Remove-Item -recurse -force "$jar_dir\res"
-    Remove-Item -recurse -force "$jar_dir\assets"
+    Remove-Item -recurse -force "$jar_dir\bin"
 }
 
 task Test-Environment{
@@ -67,10 +79,11 @@ task Build-Java-Library -depends Test-Environment{
     & "$env:ANDROID_SDK_HOME\tools\android" update project --path "$android_library_dir\UVDemo"
      
     cp -Force $android_library_dir\UserVoiceSDK\local.properties $android_library_dir
-    cp -Force $base_dir\nolint-build.gradle $android_library_dir\UserVoiceSDK\build.gradle
+    cp -Force $base_dir\build.gradle $android_library_dir\UserVoiceSDK\build.gradle
 
     pushd    
     cd "$android_library_dir\UserVoiceSDK"
     .\gradlew.bat build
+    .\gradlew.bat copydeps
     popd
 }

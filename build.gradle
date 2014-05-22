@@ -35,4 +35,12 @@ dependencies {
     compile 'oauth.signpost:signpost-core:1.2.1.2'
 }
 
-android { lintOptions { abortOnError false } }
+// Added for Xamarin Binding
+android {
+	lintOptions { abortOnError false } 
+}
+
+task copydeps(type: Copy) {
+  from configurations.compile
+  into 'build/libs'
+}
