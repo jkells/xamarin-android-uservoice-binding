@@ -59,10 +59,16 @@
     <LibraryProjectZip Include="Jars\library.zip" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedJar Include="Jars\classes.jar" />
+    <ReferenceJar Include="Jars\android-support-v4.jar" />
   </ItemGroup>
   <ItemGroup>
-    <ReferenceJar Include="Jars\android-support-v4.jar" />
+    <EmbeddedReferenceJar Include="Jars\signpost-commonshttp4-1.2.1.2.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedReferenceJar Include="Jars\commons-codec-1.4.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedReferenceJar Include="Jars\signpost-core-1.2.1.2.jar" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
