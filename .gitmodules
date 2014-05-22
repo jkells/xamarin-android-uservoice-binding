@@ -1,0 +1,3 @@
+[submodule "uservoice-android-sdk"]
+	path = uservoice-android-sdk
+	url = https://github.com/uservoice/uservoice-android-sdk.git
