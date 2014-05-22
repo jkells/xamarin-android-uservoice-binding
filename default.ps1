@@ -36,7 +36,7 @@ task Package -depends Compile{
     }
 }
 
-task Copy-Jars -depends Clean,Test-Environment{
+task Copy-Jars -depends Clean,Test-Environment,Build-Java-Library {
     Copy-Item -Force "$base_dir\ThirdParty\*.jar" "$jar_dir"
     Copy-Item -Force "$android_library_build_dir\*.jar" "$jar_dir"
     Copy-Item -Recurse -Force "$android_library_build_dir\res" "$jar_dir"
