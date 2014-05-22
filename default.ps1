@@ -8,7 +8,8 @@ properties {
   $config = "Release"  
 
   $android_sdk_dir = $env:ANDROID_SDK_HOME
-  $android_library_dir = "$base_dir\uservoice-android-sdk\UserVoiceSDK"
+  $android_library_dir = "$base_dir\uservoice-android-sdk"
+  $android_library_build_dir = "$android_library_dir\UserVoiceSDK\build\bundles\release"
 }
 
 Framework "4.0"
@@ -20,6 +21,7 @@ task Clean {
   remove-item -force -recurse $project_dir\bin -ErrorAction SilentlyContinue
   remove-item -force -recurse "$jar_dir\bin" -ErrorAction SilentlyContinue
   remove-item -force -recurse "$jar_dir\res" -ErrorAction SilentlyContinue
+  remove-item -force -recurse "$jar_dir\assets" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.zip" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.jar" -ErrorAction SilentlyContinue  
 }
@@ -35,22 +37,19 @@ task Package -depends Compile{
 }
 
 task Copy-Jars -depends Clean,Test-Environment{
-    Copy-Item -Force "$android_library_dir\libs\*.jar" "$jar_dir"
-	Copy-Item -Recurse -Force "$android_library_dir\bin\*.jar" "$jar_dir"
-    Copy-Item -Recurse -Force "$android_library_dir\bin" "$jar_dir"
-    Copy-Item -Recurse -Force "$android_library_dir\res" "$jar_dir"
-    
-    # Eclipse is putting the drawables in a "crunch" folder which Xamarin Android isn't expecting
-    Move-Item "$jar_dir\bin\res\crunch\*" "$jar_dir\bin\res\"
-    Remove-Item "$jar_dir\bin\res\crunch"
-
+    Copy-Item -Force "$base_dir\ThirdParty\*.jar" "$jar_dir"
+    Copy-Item -Force "$android_library_build_dir\*.jar" "$jar_dir"
+    Copy-Item -Recurse -Force "$android_library_build_dir\res" "$jar_dir"
+    Copy-Item -Recurse -Force "$android_library_build_dir\assets" "$jar_dir"
+        
     # Compress the binaries and resources into the library package zip
     exec{
         & $7zip_bin a -r "$jar_dir\library.zip" "$jar_dir\bin\"
         & $7zip_bin a -r "$jar_dir\library.zip" "$jar_dir\res\"
     }
-    Remove-Item -recurse -force "$jar_dir\bin"
+
     Remove-Item -recurse -force "$jar_dir\res"
+    Remove-Item -recurse -force "$jar_dir\assets"
 }
 
 task Test-Environment{
@@ -58,11 +57,20 @@ task Test-Environment{
         throw "A valid Android SDK path must be specified in the ANDROID_SDK_HOME environment variable"
     }
 
-    if(-not (Test-Path "$android_library_dir")){        
+    if(-not (Test-Path "$android_library_dir\UserVoiceSDK")){        
         throw "Ensure the library is downloaded to: $android_library_dir"
     }
+}
 
-    if(-not (Test-Path "$android_library_dir\bin")){        
-        throw "Please compile the library: $android_library_dir in eclipse before building this project"
-    }    
+task Build-Java-Library -depends Test-Environment{
+    & "$env:ANDROID_SDK_HOME\tools\android" update lib-project --path "$android_library_dir\UserVoiceSDK"
+    & "$env:ANDROID_SDK_HOME\tools\android" update project --path "$android_library_dir\UVDemo"
+     
+    cp -Force $android_library_dir\UserVoiceSDK\local.properties $android_library_dir
+    cp -Force $base_dir\nolint-build.gradle $android_library_dir\UserVoiceSDK\build.gradle
+
+    pushd    
+    cd "$android_library_dir\UserVoiceSDK"
+    .\gradlew.bat build
+    popd
 }

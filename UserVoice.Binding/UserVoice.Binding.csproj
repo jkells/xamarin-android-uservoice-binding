@@ -35,8 +35,11 @@
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Xamarin.Android.Support.v4-r18">
-      <HintPath>..\ThirdParty\Xamarin.Android.Support.v4-r18.dll</HintPath>
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\ThirdParty\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
+      <HintPath>..\ThirdParty\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -53,19 +56,10 @@
     <Folder Include="Additions\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedReferenceJar Include="Jars\commons-codec-1.8.jar" />
-  </ItemGroup>
-  <ItemGroup>
     <LibraryProjectZip Include="Jars\library.zip" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedReferenceJar Include="Jars\signpost-commonshttp4-1.2.1.2.jar" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedReferenceJar Include="Jars\signpost-core-1.2.1.2.jar" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedJar Include="Jars\uservoicesdk.jar" />
+    <EmbeddedJar Include="Jars\classes.jar" />
   </ItemGroup>
   <ItemGroup>
     <ReferenceJar Include="Jars\android-support-v4.jar" />
