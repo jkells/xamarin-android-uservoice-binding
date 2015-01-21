@@ -24,6 +24,7 @@ task Clean {
   remove-item -force -recurse "$jar_dir\assets" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.zip" -ErrorAction SilentlyContinue
   remove-item -force "$jar_dir\*.jar" -ErrorAction SilentlyContinue  
+  remove-item -force "$android_library_dir\UserVoiceSDK\build" -ErrorAction SilentlyContinue  
 }
 
 task Compile -depends Clean,Copy-Jars {
@@ -37,7 +38,6 @@ task Package -depends Compile{
 }
 
 task Copy-Jars -depends Clean,Test-Environment{
-    Copy-Item -Force "$base_dir\ThirdParty\*.jar" "$jar_dir"
     Copy-Item -Force "$android_library_build_dir\*.jar" "$jar_dir"
     Copy-Item -Recurse -Force "$android_library_build_dir\res" "$jar_dir"
     Copy-Item -Recurse -Force "$android_library_build_dir\assets" "$jar_dir"
