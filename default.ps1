@@ -7,6 +7,7 @@ properties {
   $config = "Release"  
 
   $android_sdk_dir = $env:ANDROID_SDK_HOME
+  
   $android_library_dir = "$base_dir\uservoice-android-sdk"
   $android_library_build_dir = "$android_library_dir\UserVoiceSDK\build\outputs\aar"
 }
@@ -50,11 +51,8 @@ task Build-Java-Library -depends Test-Environment{
     & "$env:ANDROID_SDK_HOME\tools\android" update lib-project --path "$android_library_dir\UserVoiceSDK" --target android-21
     & "$env:ANDROID_SDK_HOME\tools\android" update project --path "$android_library_dir\UVDemo" --target android-21
      
-    #cp -Force $android_library_dir\UserVoiceSDK\local.properties $android_library_dir
-    #cp -Force $base_dir\nolint-build.gradle $android_library_dir\UserVoiceSDK\build.gradle
-
     pushd    
     cd "$android_library_dir\UserVoiceSDK"
-    .\gradlew.bat assembleRelease
+    .\gradlew.bat build
     popd
 }
