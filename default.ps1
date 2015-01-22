@@ -35,6 +35,7 @@ task Package -depends Compile{
 
 task Copy-Jars -depends Build-Java-Library{
     Copy-Item -Force "$android_library_build_dir\*.aar" "$jar_dir"
+    Copy-Item -Force "$android_library_build_dir\*.jar" "$jar_dir"
 }
 
 task Test-Environment{
